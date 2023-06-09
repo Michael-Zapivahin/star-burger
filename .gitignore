@@ -149,3 +149,4 @@ cython_debug/
 .idea/star-burger.iml
 .idea/vcs.xml
 .idea/workspace.xml
+.DS_Store
