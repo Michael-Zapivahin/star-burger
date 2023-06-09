@@ -1,8 +1,11 @@
 from django.http import JsonResponse
 from django.templatetags.static import static
 
+import foodcartapp.db_operations as db
 
 from .models import Product
+
+
 
 import json
 
@@ -63,9 +66,10 @@ def register_order(request):
 
     try:
         data = json.loads(request.body.decode())
+        db.create_order(data)
     except ValueError as error:
         data = error
-    print(data)
+
 
     # TODO это лишь заглушка
     return JsonResponse({})
