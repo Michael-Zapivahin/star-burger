@@ -2,6 +2,8 @@ from django.http import JsonResponse
 from django.templatetags.static import static
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
+from rest_framework import status
+import phonenumbers
 
 import foodcartapp.db_operations as db
 
@@ -66,7 +68,13 @@ def product_list_api(request):
 
 @api_view(['POST'])
 def register_order(request):
-    # db.create_order(request.data)
+    not_valid = validate_fields(
+        request.data,
+        field_names=['firstname', 'lastname', 'phonenumber', 'address', 'products']
+    )
+    if not_valid:
+        return not_valid
+    db.create_order(request.data)
     # order_content = request.data
     # products = []
     # try:
@@ -82,18 +90,66 @@ def register_order(request):
     #     products.append({'error products ': str(error)})
     # except:
     #     products.append({'error products ': 'none'})
-    try:
-        products = request.data['products']
-        if not products:
-            return Response({'products': 'Это поле не может быть пустым.'})
-    except KeyError:
-        return Response({'products': 'Обязательное поле.'})
-    if not isinstance(products, list) or len(products):
-        return Response({'products': 'Ожидался list со значениями, но был получен "str".'})
-    else:
-        order = request.data
-        print(order)
+    # try:
+    #     products = request.data['products']
+    #     if not products:
+    #         return Response({'products': 'Это поле не может быть пустым.'})
+    # except KeyError:
+    #     return Response({'products': 'Обязательное поле.'})
+    # if not isinstance(products, list) or len(products):
+    #     return Response({'products': 'Ожидался list со значениями, но был получен "str".'})
+    # else:
+    #     order = request.data
+    #     print(order)
 
     # TODO это лишь заглушка
     return Response(products)
 
+
+
+def validate_fields(request_body, field_names):
+    if not request_body:
+        return Response({
+            'response': 'no data',
+        }, status=status.HTTP_400_BAD_REQUEST)
+
+    for field_name in field_names:
+        try:
+            field = request_body[field_name]
+        except KeyError:
+            return Response({
+                'error': f'{field_name} - обязательное поле.'
+            }, status=status.HTTP_400_BAD_REQUEST)
+
+        if field_name != 'products' and isinstance(field, list):
+            return Response({
+                'error': f'В поле {field_name} положили список.'
+            }, status=status.HTTP_400_BAD_REQUEST)
+
+        if not field:
+            return Response({
+                'error': f'{field_name} поле не может быть пустым.'
+            }, status=status.HTTP_400_BAD_REQUEST)
+
+        if field_name == 'products':
+            if not isinstance(field, list):
+                return Response({
+                    'error': 'products: ожидался list со значениями, но был получен \'str\'.'
+                }, status=status.HTTP_400_BAD_REQUEST)
+
+            for product in field:
+                if product['product'] > 200:
+                    return Response({
+                        'error': f'Недопустимый первичный ключ продукта \'{product["product"]}\''
+                    }, status=status.HTTP_400_BAD_REQUEST)
+
+        if field_name == 'phonenumber':
+            error_msg = Response({
+                'error': 'Введен некорректный номер телефона.'
+            }, status=status.HTTP_400_BAD_REQUEST)
+            try:
+                phonenumber = phonenumbers.parse(field, 'RU')
+                if not phonenumbers.is_valid_number(phonenumber):
+                    return error_msg
+            except phonenumbers.phonenumberutil.NumberParseException:
+                return error_msg
