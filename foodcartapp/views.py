@@ -75,36 +75,9 @@ def register_order(request):
     if not_valid:
         return not_valid
     db.create_order(request.data)
-    # order_content = request.data
-    # products = []
-    # try:
-    #     for product_key in order_content['products']:
-    #         product = {
-    #             'pk': int(product_key['product']),
-    #             'quantity': product_key['quantity'],
-    #         }
-    #         products.append(product)
-    #     if not order_content['products']:
-    #         products.append({'error loop ': order_content['products']})
-    # except KeyError or TypeError as error:
-    #     products.append({'error products ': str(error)})
-    # except:
-    #     products.append({'error products ': 'none'})
-    # try:
-    #     products = request.data['products']
-    #     if not products:
-    #         return Response({'products': 'Это поле не может быть пустым.'})
-    # except KeyError:
-    #     return Response({'products': 'Обязательное поле.'})
-    # if not isinstance(products, list) or len(products):
-    #     return Response({'products': 'Ожидался list со значениями, но был получен "str".'})
-    # else:
-    #     order = request.data
-    #     print(order)
 
     # TODO это лишь заглушка
-    return Response(products)
-
+    return Response({})
 
 
 def validate_fields(request_body, field_names):
@@ -138,7 +111,7 @@ def validate_fields(request_body, field_names):
                 }, status=status.HTTP_400_BAD_REQUEST)
 
             for product in field:
-                if product['product'] > 200:
+                if product['product'] > 1000:
                     return Response({
                         'error': f'Недопустимый первичный ключ продукта \'{product["product"]}\''
                     }, status=status.HTTP_400_BAD_REQUEST)
