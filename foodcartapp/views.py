@@ -66,9 +66,34 @@ def product_list_api(request):
 
 @api_view(['POST'])
 def register_order(request):
-    data = request.data
-    db.create_order(data)
+    # db.create_order(request.data)
+    # order_content = request.data
+    # products = []
+    # try:
+    #     for product_key in order_content['products']:
+    #         product = {
+    #             'pk': int(product_key['product']),
+    #             'quantity': product_key['quantity'],
+    #         }
+    #         products.append(product)
+    #     if not order_content['products']:
+    #         products.append({'error loop ': order_content['products']})
+    # except KeyError or TypeError as error:
+    #     products.append({'error products ': str(error)})
+    # except:
+    #     products.append({'error products ': 'none'})
+    try:
+        products = request.data['products']
+        if not products:
+            return Response({'products': 'Это поле не может быть пустым.'})
+    except KeyError:
+        return Response({'products': 'Обязательное поле.'})
+    if not isinstance(products, list) or len(products):
+        return Response({'products': 'Ожидался list со значениями, но был получен "str".'})
+    else:
+        order = request.data
+        print(order)
 
     # TODO это лишь заглушка
-    return Response(data)
+    return Response(products)
 
