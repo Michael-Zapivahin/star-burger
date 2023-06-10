@@ -1,5 +1,7 @@
 from django.http import JsonResponse
 from django.templatetags.static import static
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
 
 import foodcartapp.db_operations as db
 
@@ -62,14 +64,11 @@ def product_list_api(request):
     })
 
 
+@api_view(['POST'])
 def register_order(request):
-
-    try:
-        data = json.loads(request.body.decode())
-        db.create_order(data)
-    except ValueError as error:
-        data = error
-
+    data = request.data
+    db.create_order(data)
 
     # TODO это лишь заглушка
-    return JsonResponse({})
+    return Response(data)
+
