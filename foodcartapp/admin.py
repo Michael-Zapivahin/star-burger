@@ -25,13 +25,13 @@ class RestaurantMenuItemInline(admin.TabularInline):
 class OrderAdmin(admin.ModelAdmin):
     search_fields = [
         'firstname',
-        'surname',
-        'phone_number',
+        'lastname',
+        'phonenumber',
     ]
     list_display = [
         'firstname',
-        'surname',
-        'phone_number',
+        'lastname',
+        'phonenumber',
     ]
     inlines = [
         OrderItemInline

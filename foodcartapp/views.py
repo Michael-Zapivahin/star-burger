@@ -9,10 +9,19 @@ import phonenumbers
 
 import foodcartapp.db_operations as db
 
-from .models import Product, Order
+from .models import Product, Order, OrderItem
+
+
+class OrderItemSerializer(ModelSerializer):
+
+    class Meta:
+        model = OrderItem
+        fields = ['product', 'quantity']
 
 
 class OrderSerializer(ModelSerializer):
+
+    products = OrderItemSerializer(many=True)
 
     class Meta:
         model = Order

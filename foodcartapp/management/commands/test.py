@@ -41,7 +41,7 @@ def get_text():
         "products": [{"product": 3, "quantity": 1}, {"product": 5, "quantity": 2}],
         "firstname": "Michael",
         "lastname": "Zapivahin",
-        "phonenumber": "+7977808747",
+        "phonenumber": "+79778108747",
         "address": "Красногорск Лесная 5"
     }
 

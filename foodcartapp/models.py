@@ -130,13 +130,13 @@ class Order(models.Model):
         'Имя',
         max_length=50
     )
-    surname = models.CharField(
+    lastname = models.CharField(
         'Фамилия',
         max_length=100,
         blank=True,
     )
 
-    phone_number = PhoneNumberField(verbose_name='телефон', db_index=True)
+    phonenumber = PhoneNumberField(verbose_name='телефон', db_index=True)
 
     address = models.CharField(
         'адрес доставки',
@@ -149,13 +149,13 @@ class Order(models.Model):
         verbose_name_plural = 'Заказы'
 
     def __str__(self):
-        return f'{self.firstname} {self.phone_number}'
+        return f'{self.firstname} {self.phonenumber}'
 
 
 class OrderItem(models.Model):
     order = models.ForeignKey(
         Order,
-        related_name='order_items',
+        related_name='products',
         verbose_name="заказы",
         on_delete=models.CASCADE,
     )
@@ -175,6 +175,6 @@ class OrderItem(models.Model):
         ]
 
     def __str__(self):
-        return f"{self.order.phone_number} - {self.product.name}"
+        return f"{self.order.phonenumber} - {self.product.name}"
 
 
