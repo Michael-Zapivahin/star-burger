@@ -1,6 +1,22 @@
 
 from foodcartapp.models import Order, OrderItem, Product
 from django.shortcuts import get_object_or_404
+from rest_framework.serializers import ModelSerializer
+
+class OrderItemSerializer(ModelSerializer):
+
+    class Meta:
+        model = OrderItem
+        fields = ['id', 'product', 'quantity']
+
+
+class OrderSerializer(ModelSerializer):
+
+    products = OrderItemSerializer(many=True)
+
+    class Meta:
+        model = Order
+        fields = ['id', 'firstname', 'lastname', 'phonenumber', 'address', 'products']
 
 
 def create_order(order_content):
@@ -22,3 +38,18 @@ def create_order(order_content):
             }
         )
     return order
+
+
+def get_orders():
+    orders = []
+    for order in Order.objects.all():
+        orders.append(
+            {
+                "firstname": order.firstname,
+                "lastname": order.lastname,
+                "phonenumber": order.phonenumber,
+                "address": order.phonenumber,
+                "id": order.id,
+            }
+        )
+    return orders
