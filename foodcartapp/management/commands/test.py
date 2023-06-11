@@ -12,27 +12,23 @@ class Command(BaseCommand):
     help = 'test'
 
     def handle(self, *args, **options):
-        order_content = get_text()
-        print(str(order_content))
+        # order_content = get_text()
+        # print(str(order_content))
 
-        order, created = Order.objects.update_or_create(
-            phonenumber=order_content['phonenumber'],
-            defaults={
-                'firstname': order_content['firstname'],
-                'lastname': order_content['lastname'],
-                'address': order_content['address'],
-            }
-        )
-
-        for index, product_key in enumerate(order_content['products']):
-            product = get_object_or_404(Product, pk=int(product_key['product']))
-            item = OrderItem.objects.update_or_create(
-                order=order,
-                product=product,
-                defaults={
-                    'quantity': product_key['quantity'],
+        orders = []
+        for order in Order.objects.all().get_order_cost():
+            orders.append(
+                {
+                    "firstname": order.firstname,
+                    "lastname": order.lastname,
+                    "phonenumber": order.phonenumber,
+                    "address": order.phonenumber,
+                    "id": order.id,
+                    "cost": order.cost,
                 }
             )
+            print(orders)
+            break
 
 
 

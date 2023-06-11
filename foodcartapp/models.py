@@ -4,6 +4,14 @@ from django.core.validators import MinValueValidator
 from phonenumber_field.modelfields import PhoneNumberField
 
 
+class OrderQuerySet(models.QuerySet):
+    def get_order_cost(self):
+        orders = self.annotate(cost=models.Sum(
+            models.F('products__quantity') * models.F('products__product__price')
+        ))
+        return orders
+
+
 class Restaurant(models.Model):
     name = models.CharField(
         'название',
@@ -143,6 +151,8 @@ class Order(models.Model):
         max_length=100,
         blank=True,
     )
+
+    objects = OrderQuerySet.as_manager()
 
     class Meta:
         verbose_name = 'Заказ'

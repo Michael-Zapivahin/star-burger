@@ -42,7 +42,7 @@ def create_order(order_content):
 
 def get_orders():
     orders = []
-    for order in Order.objects.all():
+    for order in Order.objects.all().get_order_cost():
         orders.append(
             {
                 "firstname": order.firstname,
@@ -50,6 +50,7 @@ def get_orders():
                 "phonenumber": order.phonenumber,
                 "address": order.phonenumber,
                 "id": order.id,
+                "cost": order.cost,
             }
         )
     return orders
