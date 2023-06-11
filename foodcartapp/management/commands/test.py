@@ -38,10 +38,10 @@ class Command(BaseCommand):
 
 def get_text():
     return {
-        'products': [{'product': 3, 'quantity': 1}, {'product': 5, 'quantity': 2}],
-        'firstname': 'Michael',
-        'lastname': 'Zapivahin',
-        'phonenumber': '+7977808747',
-        'address': 'Красногорск улица Лесная дом 5'
+        "products": [{"product": 3, "quantity": 1}, {"product": 5, "quantity": 2}],
+        "firstname": "Michael",
+        "lastname": "Zapivahin",
+        "phonenumber": "+7977808747",
+        "address": "Красногорск Лесная 5"
     }
 

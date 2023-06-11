@@ -24,12 +24,12 @@ class RestaurantMenuItemInline(admin.TabularInline):
 @admin.register(Order)
 class OrderAdmin(admin.ModelAdmin):
     search_fields = [
-        'name',
+        'firstname',
         'surname',
         'phone_number',
     ]
     list_display = [
-        'name',
+        'firstname',
         'surname',
         'phone_number',
     ]

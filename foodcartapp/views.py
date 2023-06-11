@@ -3,15 +3,20 @@ from django.templatetags.static import static
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework.serializers import ModelSerializer
+
 import phonenumbers
 
 import foodcartapp.db_operations as db
 
-from .models import Product
+from .models import Product, Order
 
 
+class OrderSerializer(ModelSerializer):
 
-import json
+    class Meta:
+        model = Order
+        fields = ['firstname', 'lastname', 'phonenumber', 'address', 'products']
 
 
 def banners_list_api(request):
@@ -68,13 +73,11 @@ def product_list_api(request):
 
 @api_view(['POST'])
 def register_order(request):
-    not_valid = validate_fields(
-        request.data,
-        field_names=['firstname', 'lastname', 'phonenumber', 'address', 'products']
-    )
-    if not_valid:
-        return not_valid
-    db.create_order(request.data)
+    serializer = OrderSerializer(data=request.data)
+    serializer.is_valid(raise_exception=True)
+
+    # db.create_order(request.data)
+    print(serializer.validated_data)
 
     # TODO это лишь заглушка
     return Response({})
