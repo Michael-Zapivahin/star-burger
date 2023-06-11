@@ -16,7 +16,7 @@ class OrderItemSerializer(ModelSerializer):
 
     class Meta:
         model = OrderItem
-        fields = ['product', 'quantity']
+        fields = ['id', 'product', 'quantity']
 
 
 class OrderSerializer(ModelSerializer):
@@ -25,7 +25,7 @@ class OrderSerializer(ModelSerializer):
 
     class Meta:
         model = Order
-        fields = ['firstname', 'lastname', 'phonenumber', 'address', 'products']
+        fields = ['id', 'firstname', 'lastname', 'phonenumber', 'address', 'products']
 
 
 def banners_list_api(request):
@@ -86,9 +86,10 @@ def register_order(request):
     serializer = OrderSerializer(data=request.data)
     serializer.is_valid(raise_exception=True)
 
-    db.create_order(serializer.validated_data)
+    order = db.create_order(serializer.validated_data)
+    serializer = OrderSerializer(order)
 
-    return Response({})
+    return Response(serializer.data)
 
 
 def validate_fields(request_body, field_names):
