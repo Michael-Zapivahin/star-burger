@@ -82,13 +82,12 @@ def product_list_api(request):
 
 @api_view(['POST'])
 def register_order(request):
+
     serializer = OrderSerializer(data=request.data)
     serializer.is_valid(raise_exception=True)
 
-    # db.create_order(request.data)
-    print(serializer.validated_data)
+    db.create_order(serializer.validated_data)
 
-    # TODO это лишь заглушка
     return Response({})
 
 
