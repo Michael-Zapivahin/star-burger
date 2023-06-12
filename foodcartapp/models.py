@@ -1,7 +1,15 @@
 from django.db import models
-from django.core.validators import MinValueValidator
+from django.core.validators import MinValueValidator, ValidationError
 
 from phonenumber_field.modelfields import PhoneNumberField
+
+
+def validate_positive(value):
+    if value < 0:
+        raise ValidationError(
+            f'{value} is not an positive number',
+            params={'value': value},
+        )
 
 
 class OrderQuerySet(models.QuerySet):
@@ -176,6 +184,8 @@ class OrderItem(models.Model):
         on_delete=models.CASCADE,
     )
     quantity = models.IntegerField('Количество')
+
+    price = models.DecimalField(max_digits=6, decimal_places=2, verbose_name='Цена', validators=[validate_positive])
 
     class Meta:
         verbose_name = 'Заказ'

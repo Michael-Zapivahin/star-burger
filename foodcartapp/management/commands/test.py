@@ -12,23 +12,13 @@ class Command(BaseCommand):
     help = 'test'
 
     def handle(self, *args, **options):
-        # order_content = get_text()
-        # print(str(order_content))
 
-        orders = []
-        for order in Order.objects.all().get_order_cost():
-            orders.append(
-                {
-                    "firstname": order.firstname,
-                    "lastname": order.lastname,
-                    "phonenumber": order.phonenumber,
-                    "address": order.phonenumber,
-                    "id": order.id,
-                    "cost": order.cost,
-                }
-            )
-            print(orders)
-            break
+        # def set_orders_price():
+        for order in Order.objects.all().iterator():
+            for item in order.products.all():
+                item.price = item.product.price
+                item.save()
+
 
 
 
