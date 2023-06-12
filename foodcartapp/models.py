@@ -142,6 +142,28 @@ class RestaurantMenuItem(models.Model):
 
 
 class Order(models.Model):
+    PAYMENT_METHOD = (
+        ('Наличностью', 'Наличностью'), ('Электронно', 'Электронно')
+    )
+    payment = models.CharField(
+        'Способ оплаты',
+        choices=PAYMENT_METHOD,
+        max_length=15,
+        db_index=True,
+        default='Наличностью'
+    )
+    CHOICES = (
+        ('Обработан', 'Обработан'),
+        ('Необработан', 'Необработан'),
+        ('Готовится', 'Готовится')
+    )
+    status = models.CharField(
+        'Статус',
+        choices=CHOICES,
+        default='Необработан',
+        max_length=15,
+        db_index=True
+    )
     firstname = models.CharField(
         'Имя',
         max_length=50
@@ -154,11 +176,17 @@ class Order(models.Model):
 
     phonenumber = PhoneNumberField(verbose_name='телефон', db_index=True)
 
-    address = models.CharField(
-        'адрес доставки',
-        max_length=100,
-        blank=True,
+    address = models.CharField('адрес доставки', max_length=100, blank=True)
+
+    comment = models.TextField(blank=True, null=True, verbose_name='Комментарий')
+
+    registration_date = models.DateTimeField(
+        blank=True, null=True, verbose_name='Дата регистрации', db_index=True, auto_now=True
     )
+
+    call_date = models.DateTimeField(blank=True, null=True, verbose_name='Дата звонка', db_index=True)
+
+    delivery_date = models.DateTimeField(blank=True, null=True, verbose_name='Дата доставки', db_index=True)
 
     objects = OrderQuerySet.as_manager()
 

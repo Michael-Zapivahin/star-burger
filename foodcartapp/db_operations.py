@@ -32,7 +32,7 @@ def create_order(order_content):
 
 def get_orders():
     orders = []
-    for order in Order.objects.all().get_order_cost():
+    for order in Order.objects.filter(status__in=['Готовится', 'Необработан']).get_order_cost():
         orders.append(
             {
                 "firstname": order.firstname,
@@ -41,6 +41,9 @@ def get_orders():
                 "address": order.address,
                 "id": order.id,
                 "cost": order.cost,
+                "status": order.status,
+                "comment": order.comment or '',
+                "payment": order.payment,
                 "admin_url": reverse('admin:foodcartapp_order_change', args=(order.id,))
             }
         )

@@ -14,22 +14,27 @@
    <table class="table table-responsive">
     <tr>
       <th>ID заказа</th>
+      <th>Статус</th>
+      <th>Способ оплаты</th>
       <th>Стоимость</th>
       <th>Клиент</th>
       <th>Телефон</th>
       <th>Адрес доставки</th>
+      <th>Комментарий</th>
       <th>Ссылка на админку</th>
     </tr>
 
     {% for item in order_items %}
       <tr>
         <td>{{ item.id }}</td>
+        <td>{{ item.status }}</td>
+        <td>{{ item.payment }}</td>
         <td>{{ item.cost }} руб.</td>
         <td>{{ item.firstname }}</td>
         <td>{{ item.phonenumber }}</td>
         <td>{{ item.address }}</td>
+        <td>{{ item.comment }}</td>
         <td>
-<!--            <a href="https://{{ item.admin_url }}" target="_blank">https://{{ item.admin_url }}</a>-->
           <a href="{{ item.admin_url }}" target="_blank">Редактировать</a>
         </td>
       </tr>

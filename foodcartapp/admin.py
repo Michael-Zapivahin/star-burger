@@ -29,9 +29,13 @@ class OrderAdmin(admin.ModelAdmin):
         'phonenumber',
     ]
     list_display = [
+        'id',
+        'status',
+        'payment',
         'firstname',
         'lastname',
         'phonenumber',
+        'comment',
     ]
     inlines = [
         OrderItemInline
