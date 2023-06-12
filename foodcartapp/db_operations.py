@@ -1,9 +1,18 @@
 
 from foodcartapp.models import Order, OrderItem, Product
+from geodata.models import Place
 from django.shortcuts import get_object_or_404
-from rest_framework.serializers import ModelSerializer
 from django.db import transaction
 from django.urls import reverse
+
+
+def create_place(place_content):
+    place, created = Place.objects.update_or_create(
+        lat=place_content['lat'],
+        lon=place_content['lon'],
+        place=place_content['place'],
+    )
+    return place
 
 
 @transaction.atomic

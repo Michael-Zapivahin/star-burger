@@ -29,6 +29,7 @@ INSTALLED_APPS = [
     'debug_toolbar',
     'phonenumber_field',
     'rest_framework',
+    'geodata',
 ]
 
 MIDDLEWARE = [
@@ -124,3 +125,5 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "assets"),
     os.path.join(BASE_DIR, "bundles"),
 ]
+
+YANDEX_KEY = env('YANDEX_KEY')

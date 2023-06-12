@@ -1,5 +1,5 @@
 
-
+import requests
 from django.core.management.base import BaseCommand
 from django.core.files.base import ContentFile
 from foodcartapp.models import Order, OrderItem, Product
@@ -7,6 +7,8 @@ from django.shortcuts import get_object_or_404
 from rest_framework.serializers import ModelSerializer
 
 import foodcartapp.db_operations as db
+
+import star_burger.settings as settings
 
 
 class OrderItemSerializer(ModelSerializer):
@@ -29,34 +31,10 @@ class Command(BaseCommand):
     help = 'test'
 
     def handle(self, *args, **options):
-        order_content = get_text()
-        serializer = OrderSerializer(data=order_content)
-        serializer.is_valid(raise_exception=True)
-        order = db.create_order(order_content)
-        serializer = OrderSerializer(order)
-        print(serializer.data)
-
-
-        # order, created = Order.objects.update_or_create(
-        #     phonenumber=order_content['phonenumber'],
-        #     defaults={
-        #         'firstname': order_content['firstname'],
-        #         'lastname': order_content['lastname'],
-        #         'address': order_content['address'],
-        #     }
-        # )
-        #
-        # for index, product_key in enumerate(order_content['products']):
-        #     product = get_object_or_404(Product, pk=product_key['product'])
-        #     item = OrderItem.objects.update_or_create(
-        #         order=order,
-        #         # product=product_key['product'],
-        #         product=product,
-        #         defaults={
-        #             'quantity': product_key['quantity'],
-        #         },
-        #         price=product.price
-        #     )
+        apikey = settings.YANDEX_KEY;
+        address = "Красногорск Лесная 5"
+        coord = fetch_coordinates(apikey, address)
+        print(coord)
 
 
 
@@ -72,3 +50,19 @@ def get_text():
         "address": "Красногорск Лесная 5"
     }
 
+def fetch_coordinates(apikey, address):
+    base_url = "https://geocode-maps.yandex.ru/1.x"
+    response = requests.get(base_url, params={
+        "geocode": address,
+        "apikey": apikey,
+        "format": "json",
+    })
+    response.raise_for_status()
+    found_places = response.json()['response']['GeoObjectCollection']['featureMember']
+
+    if not found_places:
+        return None
+
+    most_relevant = found_places[0]
+    lon, lat = most_relevant['GeoObject']['Point']['pos'].split(" ")
+    return lon, lat

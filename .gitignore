@@ -150,3 +150,5 @@ cython_debug/
 .idea/vcs.xml
 .idea/workspace.xml
 .DS_Store
+geodata/__init__.py
+geodata/migrations/__init__.py
