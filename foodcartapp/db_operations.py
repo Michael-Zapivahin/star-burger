@@ -3,6 +3,7 @@ from foodcartapp.models import Order, OrderItem, Product
 from django.shortcuts import get_object_or_404
 from rest_framework.serializers import ModelSerializer
 from django.db import transaction
+from django.urls import reverse
 
 
 @transaction.atomic
@@ -16,16 +17,15 @@ def create_order(order_content):
         }
     )
 
-    for index, product_key in enumerate(order_content['products']):
-        product = get_object_or_404(Product, pk=product_key['product'])
-        item = OrderItem.objects.update_or_create(
+    for _, order_item in enumerate(order_content['products']):
+        product = get_object_or_404(Product, pk=order_item['product'])
+        _ = OrderItem.objects.update_or_create(
             order=order,
-            # product=product_key['product'],
             product=product,
             defaults={
-                'quantity': product_key['quantity'],
+                'quantity': order_item['quantity'],
+                'price': product.price,
             },
-            price=product.price
         )
     return order
 
@@ -41,6 +41,7 @@ def get_orders():
                 "address": order.address,
                 "id": order.id,
                 "cost": order.cost,
+                "admin_url": reverse('admin:foodcartapp_order_change', args=(order.id,))
             }
         )
     return orders
