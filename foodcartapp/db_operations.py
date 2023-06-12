@@ -48,7 +48,7 @@ def get_orders():
                 "firstname": order.firstname,
                 "lastname": order.lastname,
                 "phonenumber": order.phonenumber,
-                "address": order.phonenumber,
+                "address": order.address,
                 "id": order.id,
                 "cost": order.cost,
             }
