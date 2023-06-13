@@ -3,7 +3,7 @@ from foodcartapp.models import Order, OrderItem, Product
 from geodata.models import Place
 from django.shortcuts import get_object_or_404
 from django.db import transaction
-from django.urls import reverse
+
 
 
 def create_place(place_content):
@@ -39,21 +39,3 @@ def create_order(order_content):
     return order
 
 
-def get_orders():
-    orders = []
-    for order in Order.objects.filter(status__in=['01', '02', '03', '04']).get_order_cost():
-        orders.append(
-            {
-                "firstname": order.firstname,
-                "lastname": order.lastname,
-                "phonenumber": order.phonenumber,
-                "address": order.address,
-                "id": order.id,
-                "cost": order.cost,
-                "status": order.status,
-                "comment": order.comment or '',
-                "payment": order.payment,
-                "admin_url": reverse('admin:foodcartapp_order_change', args=(order.id,))
-            }
-        )
-    return orders

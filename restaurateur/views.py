@@ -1,5 +1,5 @@
 from django import forms
-from django.shortcuts import redirect, render, get_object_or_404
+from django.shortcuts import redirect, render, get_object_or_404, Http404
 from django.views import View
 from django.urls import reverse_lazy
 from django.contrib.auth.decorators import user_passes_test
@@ -7,10 +7,13 @@ from django.contrib.auth.decorators import user_passes_test
 from django.contrib.auth import authenticate, login
 from django.contrib.auth import views as auth_views
 
+import requests
+from geopy import distance
+
+import star_burger.settings as settings
 
 from foodcartapp.models import Product, Restaurant, Order, RestaurantMenuItem
-
-import foodcartapp.db_operations as db
+from geodata.models import Place
 
 
 class Login(forms.Form):
@@ -111,13 +114,61 @@ def view_orders(request):
                     if not restaurants_for_product:
                         restaurants_possible = False
                 if restaurants_possible:
-                    order_restaurants.append(restaurants[restaurant])
+                    delivery_distance = get_distance(order.address, restaurants[restaurant].address)
+                    order_restaurants.append({
+                        'restaurant': restaurants[restaurant],
+                        'distance': delivery_distance
+                    })
 
-            if order_restaurants:
-                order.restaurant_possible = order_restaurants[0].name
+            its_one = True
+            for _, restaurant in enumerate(order_restaurants):
+                if its_one or (restaurant['distance'] < delivery_distance):
+                    delivery_distance = restaurant['distance']
+                    order.restaurant_selected = False
+                    order.restaurant_possible = f'{restaurant["restaurant"].name}, {round(delivery_distance, 0)} км.'
+                    order.restaurant_distance = round(delivery_distance, 0)
+                    its_one = False
         else:
-            order.restaurant_selected = order.restaurant.name
+            order.restaurant_selected = True
 
     return render(request, template_name='order_items.html', context={
         'order_items': orders
     })
+
+
+def fetch_coordinates(apikey, address):
+    base_url = "https://geocode-maps.yandex.ru/1.x"
+    response = requests.get(base_url, params={
+        "geocode": address,
+        "apikey": apikey,
+        "format": "json",
+    })
+    response.raise_for_status()
+    found_places = response.json()['response']['GeoObjectCollection']['featureMember']
+
+    if not found_places:
+        return None
+
+    most_relevant = found_places[0]
+    lon, lat = most_relevant['GeoObject']['Point']['pos'].split(" ")
+    return lon, lat
+
+
+def get_place_coordinates(api_key, place):
+
+    try:
+        place = get_object_or_404(Place, place=place)
+        lon, lat = place.lon, place.lat
+    except Http404:
+        lon, lat = fetch_coordinates(api_key, place)
+        Place.objects.create(place=place, lon=lon, lat=lat)
+
+    return lon, lat
+
+
+def get_distance(place_from, place_to):
+    api_key = settings.YANDEX_KEY
+    coordinates_from = get_place_coordinates(api_key, place_from)
+    coordinates_to = get_place_coordinates(api_key, place_to)
+    return distance.distance(coordinates_from, coordinates_to).km
+

@@ -36,20 +36,14 @@
         <td>{{ item.address }}</td>
         <td>
           {% if item.restaurant_selected %}
-            <b style="color: green">Готовится в</b><br><ul><li>{{item.restaurant_selected}}</li></ul>
-          {% else %}
-            <details style="border: 1px solid; border-radius: 4px; padding: 0.5em 0.5em 0">
-              <summary><p style="color: red">Может быть приготовлен в...</p></summary>
-                <ul>
-                  {% for rest in item.restaurant_possible%}
-                    {% if rest.2 == "error" %}
-                      <li>{{rest.0}} - ошибка определения координат </li>
-                    {% else %}
-                      <li>{{rest.0}} - {{rest.2}} км</li>
-                    {% endif %}
-                  {% endfor %}
-                </ul>
-            </details>
+            <b style="color: green">Готовится в</b><br><ul><li>{{item.restaurant}}</li></ul>
+          {% endif %}
+          {% if item.restaurant_possible %}
+            <b style="color: green">Может быть приготовлен в</b><br><ul><li>{{item.restaurant_possible}}</li></ul>
+<!--            <details style="border: 1px solid; border-radius: 4px; padding: 0.5em 0.5em 0">-->
+<!--              <summary><p style="color: red">Может быть приготовлен в...{{item.restaurant_possible}}</p></summary>-->
+<!--              <b style="color: red">Может быть приготовлен в...</b><br><ul><li>{{item.restaurant_possible}}</li></ul>-->
+<!--            </details>-->
           {% endif %}
         </td>
         <td>{{ item.comment }}</td>
