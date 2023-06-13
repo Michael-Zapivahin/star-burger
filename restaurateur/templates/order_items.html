@@ -40,10 +40,6 @@
           {% endif %}
           {% if item.restaurant_possible %}
             <b style="color: green">Может быть приготовлен в</b><br><ul><li>{{item.restaurant_possible}}</li></ul>
-<!--            <details style="border: 1px solid; border-radius: 4px; padding: 0.5em 0.5em 0">-->
-<!--              <summary><p style="color: red">Может быть приготовлен в...{{item.restaurant_possible}}</p></summary>-->
-<!--              <b style="color: red">Может быть приготовлен в...</b><br><ul><li>{{item.restaurant_possible}}</li></ul>-->
-<!--            </details>-->
           {% endif %}
         </td>
         <td>{{ item.comment }}</td>

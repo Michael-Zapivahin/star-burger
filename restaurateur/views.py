@@ -126,7 +126,6 @@ def view_orders(request):
                     delivery_distance = restaurant['distance']
                     order.restaurant_selected = False
                     order.restaurant_possible = f'{restaurant["restaurant"].name}, {round(delivery_distance, 0)} км.'
-                    order.restaurant_distance = round(delivery_distance, 0)
                     its_one = False
         else:
             order.restaurant_selected = True
@@ -171,4 +170,3 @@ def get_distance(place_from, place_to):
     coordinates_from = get_place_coordinates(api_key, place_from)
     coordinates_to = get_place_coordinates(api_key, place_to)
     return distance.distance(coordinates_from, coordinates_to).km
-
