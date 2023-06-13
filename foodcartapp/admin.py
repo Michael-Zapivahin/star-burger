@@ -35,6 +35,7 @@ class OrderAdmin(admin.ModelAdmin):
         'firstname',
         'lastname',
         'phonenumber',
+        'restaurant',
         'comment',
     ]
     inlines = [

@@ -41,7 +41,7 @@ def create_order(order_content):
 
 def get_orders():
     orders = []
-    for order in Order.objects.filter(status__in=['Готовится', 'Необработан']).get_order_cost():
+    for order in Order.objects.filter(status__in=['01', '02', '03', '04']).get_order_cost():
         orders.append(
             {
                 "firstname": order.firstname,

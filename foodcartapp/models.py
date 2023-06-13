@@ -142,25 +142,33 @@ class RestaurantMenuItem(models.Model):
 
 
 class Order(models.Model):
-    PAYMENT_METHOD = (
-        ('Наличностью', 'Наличностью'), ('Электронно', 'Электронно')
-    )
+    CASH = 'CASH'
+    CARD = 'CARD'
+    PAYMENT_TYPE = [
+        (CASH, 'Наличными'),
+        (CARD, 'Картой'),
+    ]
     payment = models.CharField(
         'Способ оплаты',
-        choices=PAYMENT_METHOD,
+        choices=PAYMENT_TYPE,
         max_length=15,
         db_index=True,
-        default='Наличностью'
+        default=CASH
     )
-    CHOICES = (
-        ('Обработан', 'Обработан'),
-        ('Необработан', 'Необработан'),
-        ('Готовится', 'Готовится')
-    )
+    NEW = '01'
+    COOKING = '02'
+    DELIVERY = '03'
+    DONE = '04'
+    ORDER_STATUS = [
+        (NEW, 'Не обработан'),
+        (COOKING, 'Готовится'),
+        (DELIVERY, 'Доставка'),
+        (DONE, 'Доставлен'),
+    ]
     status = models.CharField(
         'Статус',
-        choices=CHOICES,
-        default='Необработан',
+        choices=ORDER_STATUS,
+        default=NEW,
         max_length=15,
         db_index=True
     )
@@ -187,6 +195,14 @@ class Order(models.Model):
     call_date = models.DateTimeField(blank=True, null=True, verbose_name='Дата звонка', db_index=True)
 
     delivery_date = models.DateTimeField(blank=True, null=True, verbose_name='Дата доставки', db_index=True)
+
+    restaurant = models.ForeignKey(
+        Restaurant,
+        verbose_name='Ресторан',
+        blank=True,
+        null=True,
+        on_delete=models.CASCADE
+    )
 
     objects = OrderQuerySet.as_manager()
 

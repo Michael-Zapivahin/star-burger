@@ -2,7 +2,7 @@
 import requests
 from django.core.management.base import BaseCommand
 from django.core.files.base import ContentFile
-from foodcartapp.models import Order, OrderItem, Product
+from foodcartapp.models import Order, OrderItem, Product, RestaurantMenuItem, Restaurant
 from django.shortcuts import get_object_or_404
 from rest_framework.serializers import ModelSerializer
 
@@ -31,13 +31,33 @@ class Command(BaseCommand):
     help = 'test'
 
     def handle(self, *args, **options):
-        apikey = settings.YANDEX_KEY;
-        address = "Красногорск Лесная 5"
-        coord = fetch_coordinates(apikey, address)
-        print(coord)
+        test_function()
 
 
+def test_function():
+    orders = list(Order.objects.exclude(status=Order.DONE).get_order_cost().order_by('status'))
+    menu_items = RestaurantMenuItem.objects.filter(availability=True).values('restaurant', 'product')
+    restaurants = {}
+    for item in menu_items:
+        restaurants[f'restaurant_{item["restaurant"]}'] = get_object_or_404(Restaurant, pk=item["restaurant"])
+    for order in orders:
+        if order.restaurant is None:
+            order_restaurants = []
+            order_products = order.products.all()
+            for restaurant in restaurants:
+                restaurants_possible = True
+                for order_product in order_products:
+                    restaurants_for_product = menu_items.filter(product=order_product.product,
+                                                                restaurant=restaurants[restaurant])
+                    if not restaurants_for_product:
+                        restaurants_possible = False
+                if restaurants_possible:
+                    order_restaurants.append(restaurants[restaurant])
 
+            if order_restaurants:
+                order.restaurant_selected = order_restaurants[0].name
+        else:
+            order.restaurant_selected = order.restaurant.name
 
 
 
@@ -50,7 +70,10 @@ def get_text():
         "address": "Красногорск Лесная 5"
     }
 
-def fetch_coordinates(apikey, address):
+
+def fetch_coordinates():
+    apikey = settings.YANDEX_KEY;
+    address = "Красногорск Лесная 5"
     base_url = "https://geocode-maps.yandex.ru/1.x"
     response = requests.get(base_url, params={
         "geocode": address,
@@ -65,4 +88,4 @@ def fetch_coordinates(apikey, address):
 
     most_relevant = found_places[0]
     lon, lat = most_relevant['GeoObject']['Point']['pos'].split(" ")
-    return lon, lat
+    print (lon, lat)

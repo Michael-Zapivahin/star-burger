@@ -1,5 +1,5 @@
 from django import forms
-from django.shortcuts import redirect, render
+from django.shortcuts import redirect, render, get_object_or_404
 from django.views import View
 from django.urls import reverse_lazy
 from django.contrib.auth.decorators import user_passes_test
@@ -8,7 +8,7 @@ from django.contrib.auth import authenticate, login
 from django.contrib.auth import views as auth_views
 
 
-from foodcartapp.models import Product, Restaurant, Order
+from foodcartapp.models import Product, Restaurant, Order, RestaurantMenuItem
 
 import foodcartapp.db_operations as db
 
@@ -94,6 +94,30 @@ def view_restaurants(request):
 
 @user_passes_test(is_manager, login_url='restaurateur:login')
 def view_orders(request):
+    orders = list(Order.objects.exclude(status=Order.DONE).get_order_cost().order_by('status'))
+    menu_items = RestaurantMenuItem.objects.filter(availability=True).values('restaurant', 'product')
+    restaurants = {}
+    for item in menu_items:
+        restaurants[f'restaurant_{item["restaurant"]}'] = get_object_or_404(Restaurant, pk=item["restaurant"])
+    for order in orders:
+        if order.restaurant is None:
+            order_restaurants = []
+            order_products = order.products.all()
+            for restaurant in restaurants:
+                restaurants_possible = True
+                for order_product in order_products:
+                    restaurants_for_product = menu_items.filter(product=order_product.product,
+                                                                restaurant=restaurants[restaurant])
+                    if not restaurants_for_product:
+                        restaurants_possible = False
+                if restaurants_possible:
+                    order_restaurants.append(restaurants[restaurant])
+
+            if order_restaurants:
+                order.restaurant_possible = order_restaurants[0].name
+        else:
+            order.restaurant_selected = order.restaurant.name
+
     return render(request, template_name='order_items.html', context={
-        'order_items': db.get_orders()
+        'order_items': orders
     })
