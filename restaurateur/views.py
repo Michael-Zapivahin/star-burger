@@ -6,6 +6,7 @@ from django.contrib.auth.decorators import user_passes_test
 
 from django.contrib.auth import authenticate, login
 from django.contrib.auth import views as auth_views
+from django.urls import reverse
 
 import requests
 from geopy import distance
@@ -103,6 +104,7 @@ def view_orders(request):
     for item in menu_items:
         restaurants[f'restaurant_{item["restaurant"]}'] = get_object_or_404(Restaurant, pk=item["restaurant"])
     for order in orders:
+        order.id_admin_url = reverse('admin:foodcartapp_order_change', args=(order.id,))
         if order.restaurant is None:
             order_restaurants = []
             order_products = order.products.all()
