@@ -9,7 +9,6 @@ from django.urls import reverse
 from geodata.models import Place
 from django.db import transaction
 
-import foodcartapp.db_operations as db
 
 from geopy import distance
 

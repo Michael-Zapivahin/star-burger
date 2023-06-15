@@ -153,7 +153,6 @@ class Order(models.Model):
         choices=PAYMENT_TYPE,
         max_length=15,
         db_index=True,
-        default=CASH
     )
     NEW = '01'
     COOKING = '02'
