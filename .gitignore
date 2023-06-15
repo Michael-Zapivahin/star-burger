@@ -152,3 +152,4 @@ cython_debug/
 .DS_Store
 geodata/__init__.py
 geodata/migrations/__init__.py
+foodcartapp/management/commands/temp.py

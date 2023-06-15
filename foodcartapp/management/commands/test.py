@@ -7,7 +7,7 @@ from django.shortcuts import get_object_or_404, Http404
 from rest_framework.serializers import ModelSerializer
 from django.urls import reverse
 from geodata.models import Place
-from django.db.models import F, Q, Count, ObjectDoesNotExist
+from django.db import transaction
 
 import foodcartapp.db_operations as db
 
@@ -31,12 +31,50 @@ class OrderSerializer(ModelSerializer):
         model = Order
         fields = ['id', 'firstname', 'lastname', 'phonenumber', 'address', 'products']
 
+    @transaction.atomic
+    def create(self, validated_data):
+        order, created = Order.objects.update_or_create(
+            phonenumber=validated_data['phonenumber'],
+            defaults={
+                'firstname': validated_data['firstname'],
+                'lastname': validated_data['lastname'],
+                'address': validated_data['address'],
+            }
+        )
+
+        for _, order_item in enumerate(validated_data['products']):
+            product = order_item['product']
+            _ = OrderItem.objects.update_or_create(
+                order=order,
+                product=product,
+                defaults={
+                    'quantity': order_item['quantity'],
+                    'price': product.price,
+                },
+            )
+        return order
+
 
 class Command(BaseCommand):
     help = 'test'
 
     def handle(self, *args, **options):
-        test_function()
+
+        register_order(get_text())
+
+
+def register_order(request):
+
+    serializer = OrderSerializer(data=request)
+    serializer.is_valid(raise_exception=True)
+
+    order = serializer.create(serializer.validated_data)
+    serializer = OrderSerializer(order)
+
+    print(serializer.data)
+
+
+
 
 
 def test_function():
@@ -73,11 +111,14 @@ def test_function():
 
 
 def get_text():
+    str =  {"products": [{"product": 1, "quantity": 1}],
+            "firstname": "Michael", "lastname": "zmg",
+            "phonenumber": "+7977808747", "address": "Москва, ул. Новый Арбат, 15"}
     return {
         "products": [{"product": 3, "quantity": 1}, {"product": 5, "quantity": 2}],
         "firstname": "Michael",
         "lastname": "Zapivahin",
-        "phonenumber": "+79778108745",
+        "phonenumber": "+79778108751",
         "address": "Красногорск Лесная 5"
     }
 

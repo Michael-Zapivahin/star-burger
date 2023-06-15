@@ -2,12 +2,9 @@ from django.http import JsonResponse
 from django.templatetags.static import static
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from rest_framework import status
 from rest_framework.serializers import ModelSerializer
+from django.db import transaction
 
-import phonenumbers
-
-import foodcartapp.db_operations as db
 
 from .models import Product, Order, OrderItem
 
@@ -26,6 +23,25 @@ class OrderSerializer(ModelSerializer):
     class Meta:
         model = Order
         fields = ['id', 'firstname', 'lastname', 'phonenumber', 'address', 'products']
+
+    @transaction.atomic
+    def create(self, validated_data):
+        order = Order.objects.create(
+            phonenumber=validated_data['phonenumber'],
+            firstname=validated_data['firstname'],
+            lastname=validated_data['lastname'],
+            address=validated_data['address'],
+        )
+        products = validated_data['products']
+
+        elements = [OrderItem(
+            order=order,
+            price=fields['product'].price,
+            **fields
+        ) for fields in products]
+        OrderItem.objects.bulk_create(elements)
+
+        return order
 
 
 def banners_list_api(request):
@@ -83,10 +99,11 @@ def product_list_api(request):
 @api_view(['POST'])
 def register_order(request):
 
+    print(request.data)
+
     serializer = OrderSerializer(data=request.data)
     serializer.is_valid(raise_exception=True)
-
-    order = db.create_order(serializer.validated_data)
+    order = serializer.create(serializer.validated_data)
     serializer = OrderSerializer(order)
 
     return Response(serializer.data)
