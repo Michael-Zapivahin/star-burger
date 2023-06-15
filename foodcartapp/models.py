@@ -186,7 +186,7 @@ class Order(models.Model):
 
     address = models.CharField('адрес доставки', max_length=100, blank=True)
 
-    comment = models.TextField(blank=True, null=True, verbose_name='Комментарий')
+    comment = models.TextField(blank=True, verbose_name='Комментарий')
 
     registration_date = models.DateTimeField(
         blank=True, null=True, verbose_name='Дата регистрации', db_index=True, auto_now=True
@@ -229,7 +229,12 @@ class OrderItem(models.Model):
     )
     quantity = models.IntegerField('Количество')
 
-    price = models.DecimalField(max_digits=6, decimal_places=2, verbose_name='Цена', validators=[validate_positive])
+    price = models.DecimalField(
+        max_digits=6,
+        decimal_places=2,
+        verbose_name='Цена',
+        validators=[MinValueValidator(0)]
+    )
 
     class Meta:
         verbose_name = 'Заказ'
