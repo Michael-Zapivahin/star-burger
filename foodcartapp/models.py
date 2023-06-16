@@ -226,7 +226,10 @@ class OrderItem(models.Model):
         verbose_name="продукты",
         on_delete=models.CASCADE,
     )
-    quantity = models.IntegerField('Количество')
+    quantity = models.IntegerField(
+        verbose_name='Количество',
+        validators=[MinValueValidator(1)]
+    )
 
     price = models.DecimalField(
         max_digits=6,
