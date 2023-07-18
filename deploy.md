@@ -164,6 +164,35 @@ Restart=always
 [Install]
 WantedBy=multi-user.target
 
+## nginx default /etc/nginx/sites-enabled/default
+
+server {
+    listen 195.80.50.84:80;
+  location / {
+    include '/etc/nginx/proxy_params';
+    proxy_pass http://127.0.0.1:8000/;
+  }
+  location /static/ {
+    root '/opt/star-burger/';
+  }
+}
+
+##  star-burger.service /etc/systemd/system
+[Unit]
+Description=StarBurger site
+
+[Service]
+Type=simple
+WorkingDirectory=/opt/star-burger
+ExecStart=/opt/star-burger/env/bin/gunicorn -w 3 -b 127.0.0.1:8000 star_burger.wsgi:application
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
+
+
+
+
 
 
 
