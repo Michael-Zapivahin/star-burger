@@ -12,6 +12,8 @@ urlpatterns = [
 
     path('restaurants/', views.view_restaurants, name="RestaurantView"),
 
+    path('index/', views.index_error),
+
     # TODO заглушка для нереализованного функционала
     path('orders/', views.view_orders, name="view_orders"),
 

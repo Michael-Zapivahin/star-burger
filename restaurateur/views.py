@@ -16,6 +16,8 @@ import star_burger.settings as settings
 from foodcartapp.models import Product, Restaurant, Order, RestaurantMenuItem
 from geodata.models import Place
 
+from django.http import HttpResponse
+
 
 class Login(forms.Form):
     username = forms.CharField(
@@ -173,3 +175,8 @@ def get_distance(place_from, place_to):
     coordinates_from = get_place_coordinates(api_key, place_from)
     coordinates_to = get_place_coordinates(api_key, place_to)
     return distance.distance(coordinates_from, coordinates_to).km
+
+def index_error(request):
+    a = None
+    a.hello() # Creating an error with an invalid line of code
+    return HttpResponse("Hello, world. You're at the pollapp index.")
