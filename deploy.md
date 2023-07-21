@@ -164,7 +164,7 @@ Restart=always
 [Install]
 WantedBy=multi-user.target
 
-## nginx default /etc/nginx/sites-enabled/default
+## nginx default nano /etc/nginx/sites-enabled/default
 
 server {
     listen 195.80.50.84:80;
@@ -177,7 +177,7 @@ server {
   }
 }
 
-##  star-burger.service /etc/systemd/system
+##  star-burger.service nano /etc/systemd/system/star-burger.service
 [Unit]
 Description=StarBurger site
 
@@ -189,6 +189,11 @@ Restart=always
 
 [Install]
 WantedBy=multi-user.target
+
+## https://app.rollbar.com/a/zapivahin/projects
+
+## Postgres SQL
+
 
 
 
