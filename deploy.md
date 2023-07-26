@@ -193,7 +193,17 @@ WantedBy=multi-user.target
 ## https://app.rollbar.com/a/zapivahin/projects
 
 ## Postgres SQL
-
+sudo apt update
+sudo apt install python3-pip python3-dev libpq-dev postgresql postgresql-contrib
+sudo -u postgres psql
+CREATE DATABASE starburger;
+CREATE USER admin WITH PASSWORD 'qazwsx';
+ALTER ROLE admin SET client_encoding TO 'utf8';
+ALTER ROLE admin SET default_transaction_isolation TO 'read committed';
+ALTER ROLE admin SET timezone TO 'UTC';
+GRANT ALL PRIVILEGES ON DATABASE starburger TO admin;
+\q
+source env/bin/activate
 
 
 
