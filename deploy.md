@@ -230,6 +230,7 @@ source env/bin/activate
 
 # Database
 ## 1 upload data from db sql - python manage.py dumpdata > db.json
+## ./manage.py dumpdata --exclude auth.permission --exclude contenttypes > db.json
 ####
 ```commandline
 python manage.py dumpdata --natural-primary --exclude auth.permission --exclude contenttypes --indent 4 > db.json
@@ -264,11 +265,13 @@ DATABASES = {
 
 ## load data - python manage.py loaddata db.json
 
+## cd /etc/nginx/sites-available/
+
 https://www.8host.com/blog/poluchenie-ssl-sertifikatov-s-pomoshhyu-certbot/
 
 https://certbot.eff.org/instructions?ws=nginx&os=ubuntufocal
 
-1497089-zapivahin.tw1.ru
+nano 1497089-zapivahin.tw1.ru
 
 sudo snap install --classic certbot
 
@@ -292,6 +295,11 @@ server {
   }
 
 
+## bash
+
+https://selectel.ru/blog/tutorials/linux-bash-scripting-guide/
+
+## deployburger.sh
 
 
 
