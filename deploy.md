@@ -175,7 +175,24 @@ server {
   location /static/ {
     root '/opt/star-burger/';
   }
-}
+  location /media/ {
+    root '/opt/star-burger/';
+  }
+
+server {
+    listen 195.80.50.84:80;
+  location / {
+    include '/etc/nginx/proxy_params';
+    proxy_pass http://127.0.0.1:8000/;
+  }
+  location /static/ {
+    root '/opt/star-burger/';
+  }
+  location /media/ {
+    root '/opt/star-burger/';
+  }
+
+
 
 ##  star-burger.service nano /etc/systemd/system/star-burger.service
 [Unit]
@@ -193,6 +210,10 @@ WantedBy=multi-user.target
 ## https://app.rollbar.com/a/zapivahin/projects
 
 ## Postgres SQL
+DROP DATABASE starburger
+
+\l
+
 sudo apt update
 sudo apt install python3-pip python3-dev libpq-dev postgresql postgresql-contrib
 sudo -u postgres psql
@@ -204,6 +225,77 @@ ALTER ROLE admin SET timezone TO 'UTC';
 GRANT ALL PRIVILEGES ON DATABASE starburger TO admin;
 \q
 source env/bin/activate
+
+#### settings.py
+
+# Database
+## 1 upload data from db sql - python manage.py dumpdata > db.json
+####
+```commandline
+python manage.py dumpdata --natural-primary --exclude auth.permission --exclude contenttypes --indent 4 > db.json
+
+python manage.py loaddata db.json
+
+```
+
+## 2 change setting
+# https://docs.djangoproject.com/en/4.1/ref/settings/#databases
+DATABASES = {
+    'default': dj_database_url.config(
+        default='sqlite:////{0}'.format(os.path.join(BASE_DIR, 'db.sqlite3'))
+    )
+}
+
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'starburger',
+        'USER': 'admin',
+        'PASSWORD': 'qazwsx',
+        'HOST': 'localhost',
+        'PORT': '',
+    }
+}
+
+
+## 3
+#### migrate , if you have errors - del all migrations and made new one.
+
+## load data - python manage.py loaddata db.json
+
+https://www.8host.com/blog/poluchenie-ssl-sertifikatov-s-pomoshhyu-certbot/
+
+https://certbot.eff.org/instructions?ws=nginx&os=ubuntufocal
+
+1497089-zapivahin.tw1.ru
+
+sudo snap install --classic certbot
+
+sudo ln -s /snap/bin/certbot /usr/bin/certbot
+
+sudo certbot --nginx
+
+server {
+  listen 80;
+  server_name .1497089-zapivahin.tw1.ru
+  add_header X-Frame-Options “Star Burger”;
+  location / {
+    include '/etc/nginx/proxy_params';
+    proxy_pass http://127.0.0.1:8000/;
+  }
+  location /static/ {
+    root '/opt/star-burger/';
+  }
+  location /media/ {
+    root '/opt/star-burger/';
+  }
+
+
+
+
+
+
 
 
 
