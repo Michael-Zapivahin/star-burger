@@ -97,9 +97,6 @@ MEDIA_URL = '/media/'
 #     )
 # }
 
-# DATABASES = {
-#             'default': dj_database_url.config(default=env('POSTGRES_CONNECTION'))
-# }
 
 DATABASES = {
     'default': {
