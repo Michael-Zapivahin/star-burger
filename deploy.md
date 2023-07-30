@@ -210,7 +210,7 @@ WantedBy=multi-user.target
 ## https://app.rollbar.com/a/zapivahin/projects
 
 ## Postgres SQL
-DROP DATABASE starburger
+DROP DATABASE starburger;
 
 \l
 
@@ -281,7 +281,7 @@ sudo certbot --nginx
 
 server {
   listen 80;
-  server_name .1497089-zapivahin.tw1.ru
+  server_name 1497089-zapivahin.tw1.ru;
   add_header X-Frame-Options “Star Burger”;
   location / {
     include '/etc/nginx/proxy_params';
@@ -293,6 +293,71 @@ server {
   location /media/ {
     root '/opt/star-burger/';
   }
+## http 80 it is work
+server {
+  listen 80;
+  server_name 1497089-zapivahin.tw1.ru;
+  add_header X-Frame-Options “Star Burger”;
+  location / {
+    include '/etc/nginx/proxy_params';
+    proxy_pass http://127.0.0.1:8000/;
+  }
+  location /static/ {
+    root '/opt/star-burger/';
+  }
+  location /media/ {
+    root '/opt/star-burger/';
+  }
+## HTTPS ssl 443
+#### nano /etc/nginx/sites-available/1497089-zapivahin.tw1.ru
+
+upstream website {
+    server web:8000;
+}
+
+server {
+    listen 80;
+    server_tokens off;
+    server_name *.1497089-zapivahin.tw1.ru 1497089-zapivahin.tw1.ru;
+    charset     utf8;
+    autoindex   off;
+
+    location /.well-known/acme-challenge/ {
+        root /var/www/certbot;
+    }
+
+    location / {
+        return 301 https://$host$request_uri;
+    }
+}
+
+
+server {
+  listen 443 ssl;
+  server_name 1497089-zapivahin.tw1.ru;
+  server_tokens off;
+  add_header X-Frame-Options “Star Burger”;
+
+  ssl_certificate /etc/letsencrypt/live/1497089-zapivahin.tw1.ru/fullchain.pem;
+  ssl_certificate_key /etc/letsencrypt/live/1497089-zapivahin.tw1.ru/privkey.pem;
+  include /etc/letsencrypt/options-ssl-nginx.conf;
+  ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem;
+
+  location / {
+    include '/etc/nginx/proxy_params';
+    proxy_pass http://127.0.0.1:8000/;
+  }
+  location /static/ {
+    root '/opt/star-burger/';
+  }
+  location /media/ {
+    root '/opt/star-burger/';
+  }
+
+
+
+
+
 
 
 ## bash
