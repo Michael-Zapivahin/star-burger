@@ -154,3 +154,4 @@ geodata/__init__.py
 geodata/migrations/__init__.py
 foodcartapp/management/commands/temp.py
 deploy.sh
+db.json
