@@ -373,6 +373,22 @@ curl -H "X-Rollbar-Access-Token: 11e6490dd241478dbda78a15a874db0a" -H "Content-T
 last_commit=$(git rev-parse HEAD);
 
 
+## python manage.py  clearsessions
+#### clearsessions-burger.service
+*******************************************************************
+```
+[Service]
+User=root
+ExecStart=/opt/star-burger/env/bin/python /opt/star-burger/manage.py clearsessions
+
+[Install]
+WantedBy=multi-user.target
+```
+*******************************************************************
+
+## systemd-run --on-active="24h 00m" --unit star-burger-clear.service
+
+
 
 
 
