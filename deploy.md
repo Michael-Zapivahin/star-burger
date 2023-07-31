@@ -370,6 +370,8 @@ https://docs.rollbar.com/docs/bash
 
 curl -H "X-Rollbar-Access-Token: 11e6490dd241478dbda78a15a874db0a" -H "Content-Type: application/json" -X POST 'https://api.rollbar.com/api/1/deploy' -d '{"environment": "Star_burger", "revision": "dc1f74dee5", "rollbar_name": "zapivahin", "local_username": "circle-ci", "comment": "test deployment", "status": "succeeded"}'
 
+last_commit=$(git rev-parse HEAD);
+
 
 
 
