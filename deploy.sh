@@ -23,8 +23,8 @@ else
   echo "Could not activate env"
   exit
 fi
+
 pip install -r requirements.txt
-./node_modules/.bin/parcel watch bundles-src/index.js --dist-dir bundles --public-url="./"
 python manage.py collectstatic
 
 deactivate
