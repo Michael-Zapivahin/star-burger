@@ -153,5 +153,11 @@ cython_debug/
 geodata/__init__.py
 geodata/migrations/__init__.py
 foodcartapp/management/commands/temp.py
+static/
+staticfiles/
+
 deploy.sh
 db.json
+deploy.md
+nginx.config
+
