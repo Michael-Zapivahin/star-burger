@@ -308,8 +308,9 @@ server {
   location /media/ {
     root '/opt/star-burger/';
   }
-## HTTPS ssl 443
+## HTTPS ssl 443 2 files
 #### nano /etc/nginx/sites-available/1497089-zapivahin.tw1.ru
+#### nano /etc/nginx/sites-enabled/1497089-zapivahin.tw1.ru
 
 upstream website {
     server web:8000;

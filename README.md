@@ -2,6 +2,8 @@
 
 Это сайт сети ресторанов Star Burger. Здесь можно заказать бургеры с доставкой.
 
+[Демо версия сайта Star Burger ](https://1497089-zapivahin.tw1.ru/)
+
 ![img.png](img.png)
 
 
