@@ -9,7 +9,7 @@ git pull
 python manage.py migrate --noinput
 source env/bin/activate
 npm ci --dev
-./node_modules/.bin/parcel watch bundles-src/index.js --dist-dir bundles --public-url="./"
+./node_modules/.bin/parcel bundles-src/index.js --dist-dir bundles --public-url="./"
 pip install -r requirements.txt
 python manage.py collectstatic --noinput
 deactivate
