@@ -72,7 +72,6 @@ SECRET_KEY=django-insecure-0if40nf4nf93n4
 ```sh
 python manage.py migrate
 ```
-
 Запустите сервер:
 
 ```sh
