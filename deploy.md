@@ -9,12 +9,6 @@ https://dvmn.org/encyclopedia/deploy/systemd/
 scp media/*.* root@195.80.50.84:/opt/star-burger/media
 ``
 
-#### install depended packadge
-```
-cd star-burger
-npm ci --dev
-```
-
 # If you have a ploblem with versoin node js :
 
 '''
@@ -22,8 +16,19 @@ npm i --package-lock-only
 npm audit fix
 '''
 
+### install parcel
+```commandline
+npm install --save-dev parcel
+```
+#### install depended packadge
+```
+cd star-burger
+npm ci --dev
+```
+
 ## Теперь запустите сборку фронтенда и не выключайте. Parcel будет работать в фоне и следить за изменениями в JS-коде:
 
+#### Rebuild frontend
 ```sh
 ./node_modules/.bin/parcel watch bundles-src/index.js --dist-dir bundles --public-url="./"
 ```
@@ -388,6 +393,73 @@ WantedBy=multi-user.target
 *******************************************************************
 
 ## systemd-run --on-active="24h 00m" --unit star-burger-clear.service
+
+
+## install Postrege
+
+
+
+1 check or install    https://brew.sh/index_ru
+
+#		/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+
+2 install server DB https://formulae.brew.sh/formula/postgresql@14
+
+#		brew install postgresql@14
+
+3 start server - restart `restart`
+
+#		brew services restart postgresql@14
+
+4 look at brew
+
+#		brew info postgresql@14
+
+44 Create db burger owner mihailzapivahin
+	1 psql -d template1
+	2 CREATE DATABASE burger WITH OWNER mihailzapivahin ENCODING 'UTF8';
+
+5 look at list of databases
+
+#		psql -l
+                                      List of databases
+   Name    |      Owner      | Encoding | Collate | Ctype |          Access privileges
+-----------+-----------------+----------+---------+-------+-------------------------------------
+ dbtest    | mihailzapivahin | UTF8     | C       | C     |
+ postgres  | mihailzapivahin | UTF8     | C       | C     |
+ template0 | mihailzapivahin | UTF8     | C       | C     | =c/mihailzapivahin                 +
+           |                 |          |         |       | mihailzapivahin=CTc/mihailzapivahin
+ template1 | mihailzapivahin | UTF8     | C       | C     | =c/mihailzapivahin                 +
+           |                 |          |         |       | mihailzapivahin=CTc/mihailzapivahin
+
+6 connect to db `dbtest`  (result: `dbtest=# `)
+
+#		sudo psql -U mihailzapivahin -d dbtest
+
+
+7 list tables of database
+
+#		\dt+
+
+                                         List of relations
+ Schema |  Name   | Type  |      Owner      | Persistence | Access method |    Size    | Description
+--------+---------+-------+-----------------+-------------+---------------+------------+-------------
+ public | cities  | table | mihailzapivahin | permanent   | heap          | 8192 bytes |
+ public | weather | table | mihailzapivahin | permanent   | heap          | 8192 bytes |
+(2 rows)
+
+
+8 query:  `SELECT * FROM weather;`
+
+     city      | temp_lo | temp_hi | prcp |    date
+---------------+---------+---------+------+------------
+ San Francisco |      46 |      50 | 0.25 | 1994-11-27
+ San Francisco |      43 |      57 |    0 | 1994-11-29
+(2 rows)
+
+Insert `INSERT INTO weather (city, temp_lo, temp_hi, prcp, date)
+    VALUES ('San Francisco', 43, 57, 0.0, '1994-11-29');
+
 
 
 
