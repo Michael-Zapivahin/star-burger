@@ -156,7 +156,6 @@ foodcartapp/management/commands/temp.py
 static/
 staticfiles/
 
-deploy.sh
 db.json
 deploy.md
 nginx.config
@@ -165,3 +164,5 @@ deploy_manual.sh
 deploy_manual.md
 dep.sh
 dep.sh
+test/
+
