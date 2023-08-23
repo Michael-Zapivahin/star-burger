@@ -10,19 +10,11 @@ services:
     volumes:
       - postgres:/var/lib/postgresql/data
 
-  adminer:
-    image: adminer
-    restart: always
-    ports:
-      - 8080:8080
-
   server:
     container_name: server
     build:
       context: ../.
       dockerfile: Dockerfile.dev
-    ports:
-      - '8000:8000'
     volumes:
       - ../bundles:/app/bundles
       - ../media:/app/media
@@ -30,6 +22,8 @@ services:
     env_file:
       - ../.env
     command: python /app/manage.py runserver 0.0.0.0:8000
+    ports:
+      - '8000:8000'
     depends_on:
       - db
     expose:
