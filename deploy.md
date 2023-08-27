@@ -27,13 +27,15 @@ npm ci --dev
 ```
 
 ## Теперь запустите сборку фронтенда и не выключайте. Parcel будет работать в фоне и следить за изменениями в JS-коде:
-
 #### Rebuild frontend
 ```sh
-./node_modules/.bin/parcel watch bundles-src/index.js --dist-dir bundles --public-url="./"
+
+./node_modules/.bin/parcel build bundles-src/index.js --dist-dir bundles --public-url="./"
+
 ```
 ```
 ✨  Built in 10.89s
+
 ```
 ```
 python manage.py runserver 195.80.50.84:8000

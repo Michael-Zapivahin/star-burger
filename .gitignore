@@ -165,4 +165,8 @@ deploy_manual.md
 dep.sh
 dep.sh
 test/
+docker_test/
+test/docker_dev/data/
+
+test/docker_prod/__prod
 
