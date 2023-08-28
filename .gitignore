@@ -170,3 +170,4 @@ test/docker_dev/data/
 
 test/docker_prod/__prod
 
+test/docker_dev/cli
