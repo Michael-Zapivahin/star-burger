@@ -4,17 +4,17 @@ services:
   web:
     build:
       context: ./
-      dockerfile: ./Dockerfile.dev
-    command: python manage.py runserver 0.0.0.0:8000
+      dockerfile: ./Dockerfile.prod
+    command: gunicorn -b 0.0.0.0:8000 star_burger.wsgi:application
+    ports:
+      - "8000:8000"
     volumes:
       - ./:/usr/src/app/
       - ./bundles:/usr/src/app/bundles/
       - ./media:/usr/src/app/media/
       - ./staticfiles:/usr/src/app/staticfiles/
-    ports:
-      - 8000:8000
     env_file:
-      - ./.env.dev
+      - ./.env.prod
     depends_on:
       - db
   db:
@@ -22,7 +22,7 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data/
     env_file:
-      - ./.env.dev
+      - ./.env.prod
     environment:
       - POSTGRES_USER=star
       - POSTGRES_PASSWORD=qazwsx
