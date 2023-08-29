@@ -156,7 +156,7 @@ foodcartapp/management/commands/temp.py
 static/
 staticfiles/
 
-db.json
+test/db.json
 deploy.md
 nginx.config
 
