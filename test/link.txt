@@ -1,0 +1,63 @@
+https://webdevblog.ru/kak-ispolzovat-django-postgresql-i-docker/
+
+
+# CLI
+./manage.py dumpdata --exclude contenttypes > db.json
+
+docker-compose exec web python manage.py loaddata db.json
+
+
+docker-compose exec web python manage.py createsuperuser
+
+docker-compose down -v
+
+docker-compose up -d
+
+docker-compose build
+
+python manage.py dumpdata > db.json
+
+python manage.py loaddata db.json
+
+Если вы попробуете сделать экспортировать данные на одном ПК, и восстановить на другом, то у вас ничего не выйдет.
+В процессе будет "выброшено" исключение IntegrityError.
+При этом на том же ПК, на котором был сделан экспорт - все будет импортироваться прекрасно.
+Чтобы избежать этой проблемы, из экспорта необходимо исключить таблицы contenttypes и auth.permissions:
+
+./manage.py dumpdata --exclude auth.permission --exclude contenttypes > db.json
+
+После этого импорт должен пройти без проблем:
+
+./manage.py loaddata db.json
+
+
+
+
+
+
+
+mihailzapivahin@MacBook-Pro-Mihail ~ % cat ~/.ssh/config
+
+Host timeweb
+   HostName 195.80.50.84
+   User root
+   ForwardAgent yes
+
+ ssh connect. -0-
+ #********************************************************
+
+ ~/.ssh
+ ssh-add
+ ssh -A timeweb
+ #********************************************************
+
+
+#********************************************************
+
+start PSQL path >> cd /opt/homebrew/opt/postgresql@14/bin
+
+export PATH=/opt/homebrew/opt/postgresql@14/bin:$PATH
+
+#It' work !!! postgres find
+#********************************************************
+
