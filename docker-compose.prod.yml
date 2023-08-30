@@ -6,7 +6,7 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data/
     env_file:
-      - ./.env.prod
+      - .env.prod
     environment:
       - POSTGRES_USER=star
       - POSTGRES_PASSWORD=qazwsx
@@ -15,21 +15,29 @@ services:
   web:
     build:
       context: ./
-      dockerfile: ./Dockerfile.dev
+      dockerfile: Dockerfile.dev
+    volumes:
+      - ./bundles:/app/bundles
+      - ./media:/app/media
+      - ./staticfiles:/app/static
+#    command: python manage.py collectstatic --noinput
     command: gunicorn -b 0.0.0.0:8000 star_burger.wsgi:application
     ports:
       - "8000:8000"
     env_file:
-      - ./.env.prod
+      - .env.prod
     depends_on:
       - db
 
-#  frontend:
-#    build:
-#      context: ./
-#      dockerfile: Dockerfile.frontend
-#    volumes:
-#      - ./bundles:/app/bundles
+  frontend:
+    build:
+      context: ./
+      dockerfile: Dockerfile.frontend
+#    command: ./node_modules/.bin/parcel watch bundles-src/index.js --dist-dir bundles --public-url="./"
+    volumes:
+      - ./bundles:/app/bundles
+    depends_on:
+      - db
 
 #  nginx:
 #    build:
@@ -42,5 +50,6 @@ services:
 
 volumes:
   postgres_data:
+  static:
 
 
