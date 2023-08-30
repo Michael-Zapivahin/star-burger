@@ -1,22 +1,6 @@
 version: '3.9'
 
 services:
-  web:
-    build:
-      context: ./
-      dockerfile: ./Dockerfile.prod
-    command: gunicorn -b 0.0.0.0:8000 star_burger.wsgi:application
-    ports:
-      - "8000:8000"
-#    volumes:
-#      - ./:/usr/src/app/
-#      - ./bundles:/usr/src/app/bundles/
-#      - ./media:/usr/src/app/media/
-#      - ./staticfiles:/usr/src/app/staticfiles/
-    env_file:
-      - ./.env.prod
-    depends_on:
-      - db
   db:
     image: postgres:14.6-alpine
     volumes:
@@ -27,6 +11,35 @@ services:
       - POSTGRES_USER=star
       - POSTGRES_PASSWORD=qazwsx
       - POSTGRES_DB=postgres
+
+  web:
+    build:
+      context: ./
+      dockerfile: ./Dockerfile.dev
+    command: gunicorn -b 0.0.0.0:8000 star_burger.wsgi:application
+    ports:
+      - "8000:8000"
+    env_file:
+      - ./.env.prod
+    depends_on:
+      - db
+
+#  frontend:
+#    build:
+#      context: ./
+#      dockerfile: Dockerfile.frontend
+#    volumes:
+#      - ./bundles:/app/bundles
+
+#  nginx:
+#    build:
+#      context: ./nginx
+#      dockerfile: ./Dockerfile.nginx
+#    ports:
+#      - 1337:80
+#    depends_on:
+#      - web
+
 volumes:
   postgres_data:
 

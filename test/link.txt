@@ -24,11 +24,13 @@ python manage.py loaddata db.json
 При этом на том же ПК, на котором был сделан экспорт - все будет импортироваться прекрасно.
 Чтобы избежать этой проблемы, из экспорта необходимо исключить таблицы contenttypes и auth.permissions:
 
-./manage.py dumpdata --exclude auth.permission --exclude contenttypes > db.json
+python manage.py dumpdata --exclude auth.permission --exclude contenttypes > db.json
 
 После этого импорт должен пройти без проблем:
 
-./manage.py loaddata db.json
+docker-compose -f docker-compose.prod.yml exec web python manage.py loaddata test/db.json
+
+docker-compose -f docker-compose.prod.yml exec web python manage.py migrate
 
 
 
