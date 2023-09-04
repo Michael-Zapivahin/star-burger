@@ -9,6 +9,11 @@ https://dvmn.org/encyclopedia/deploy/systemd/
 scp media/*.* root@195.80.50.84:/opt/star-burger/media
 ``
 
+```commandline for install psycopg2
+export PATH=/opt/homebrew/opt/postgresql@14/bin:$PATH
+
+```
+
 # If you have a ploblem with versoin node js :
 
 '''
