@@ -14,6 +14,12 @@ export PATH=/opt/homebrew/opt/postgresql@14/bin:$PATH
 
 ```
 
+```install Node js with choice ver
+
+nvm install 16.16.0
+
+```
+
 # If you have a ploblem with versoin node js :
 
 '''
