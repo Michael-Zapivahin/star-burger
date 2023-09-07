@@ -1,7 +1,6 @@
 
 FROM node:16.16.0-bullseye-slim AS frontend
 
-
 WORKDIR /app
 
 COPY ["package.json", "package-lock.json*", "./"]
