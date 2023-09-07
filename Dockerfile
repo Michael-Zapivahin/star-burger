@@ -1,14 +1,20 @@
-FROM node:20-alpine3.17 AS frontend
+FROM node:alpine as builder
 
 WORKDIR /app
-COPY bundles-src bundles-src
-COPY package.json package.json
-COPY package-lock.json package-lock.json
-
-RUN npm install --save-dev parcel
+COPY package.json package-lock.json ./
+ENV CI=1
 RUN npm ci
 
-CMD ["./node_modules/.bin/parcel", "build", "bundles-src/index.js", "--dist-dir", "bundle", "--public-url='./'"]
+COPY . .
+RUN npm run build -- --prod --output-path=/dist
 
+# 2. Развертываем приложение Angular на NGINX
+FROM nginx:alpine
 
-
+# Заменяем дефолтную страницу nginx соответствующей веб-приложению
+#RUN rm -rf /usr/share/nginx/html/*
+#COPY --from=builder /dist /usr/share/nginx/html
+#
+#COPY ./.nginx/nginx.conf /etc/nginx/nginx.conf
+#
+#ENTRYPOINT ["nginx", "-g", "daemon off;"]
