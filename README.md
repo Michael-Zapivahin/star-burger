@@ -192,13 +192,13 @@ Parcel будет следить за файлами в каталоге `bundle
 
 Перейдите в директорию `docker_development/` и выполните команду:
 ```
-docker compose up -d
+docker-compose -f docker-compose.prod.yml up -d
 ```
 После того, как проект будет развернут необходимо выполнить маграции:
 ```
-docker exec -it backend python manage.py migrate --noinput
+docker-compose -f docker-compose.prod.yml web python manage.py migrate
 ```
-Сайт будет доступен по [адресу](http://127.0.0.1:8000/).
+Сайт будет доступен по [адресу](http://0.0.0.1:8000/).
 
 
 ## Цели проекта
