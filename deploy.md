@@ -231,6 +231,7 @@ WantedBy=multi-user.target
 DROP DATABASE starburger;
 
 \l
+psql -d template1
 
 sudo apt update
 sudo apt install python3-pip python3-dev libpq-dev postgresql postgresql-contrib
